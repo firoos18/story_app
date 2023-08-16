@@ -37,7 +37,7 @@ class _StoryApiService implements StoryApiService {
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<List<dynamic>>(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<List<StoryModel>>>(Options(
       method: 'GET',
       headers: _headers,
@@ -54,7 +54,7 @@ class _StoryApiService implements StoryApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    var value = _result.data!
+    List<StoryModel> value = _result.data!['listStory']
         .map((dynamic i) => StoryModel.fromJson(i as Map<String, dynamic>))
         .toList();
     final httpResponse = HttpResponse(value, _result);

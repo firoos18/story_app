@@ -10,9 +10,10 @@ abstract class LoginApiService {
   factory LoginApiService(Dio dio) = _LoginApiService;
 
   @POST('/login')
-  Future<HttpResponse<LoginModel>> getLoginData({
+  Future<HttpResponse<LoginResponse>> getLoginData({
     @Header('Content-Type') String contentType = 'application/json',
-    @Header('email') required String email,
-    @Header('password') required String password,
+    // @Header('email') required String email,
+    // @Header('password') required String password,
+    @Body() required LoginDataModel loginDataModel,
   });
 }
