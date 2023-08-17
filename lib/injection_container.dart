@@ -68,6 +68,6 @@ Future<void> initializeDependencies() async {
     () => LoginBloc(sl(), sl(), sl()),
   );
   sl.registerFactory<AuthBloc>(
-    () => AuthBloc(sl(), sl(), sl()),
+    () => AuthBloc(sl(), sl()),
   );
 }

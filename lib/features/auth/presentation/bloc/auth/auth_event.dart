@@ -28,3 +28,9 @@ class OnRegisterEvent extends AuthEvent {
     required this.username,
   });
 }
+
+class OnAppOpened extends AuthEvent {
+  final String? token;
+
+  const OnAppOpened({this.token});
+}

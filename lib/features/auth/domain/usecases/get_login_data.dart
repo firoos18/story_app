@@ -13,6 +13,6 @@ class GetLoginDataUseCase
 
   @override
   Future<DataState<LoginEntity>> call({LoginDataModel? params}) {
-    return _loginRepository.getLoginData(params!);
+    return _loginRepository.getLoginData(params);
   }
 }

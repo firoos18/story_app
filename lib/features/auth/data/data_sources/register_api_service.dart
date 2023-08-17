@@ -7,7 +7,7 @@ part 'register_api_service.g.dart';
 
 @RestApi(baseUrl: storyApiBaseUrl)
 abstract class RegisterApiService {
-  factory RegisterApiService(Dio dio) = _RegisterApiService;
+  factory RegisterApiService(Dio dio, {String baseUrl}) = _RegisterApiService;
 
   @POST('/register')
   Future<HttpResponse<RegisterResponse>> registerUser({

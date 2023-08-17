@@ -4,7 +4,7 @@ class RegisterResponse extends RegisterEntity {
   const RegisterResponse({
     bool? error,
     String? message,
-  });
+  }) : super(error: error, message: message);
 
   factory RegisterResponse.fromJson(Map<String, dynamic> json) {
     return RegisterResponse(

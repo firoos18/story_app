@@ -1,4 +1,3 @@
-import 'package:flutter/rendering.dart';
 import 'package:story_app_dicoding/features/auth/domain/entities/login_entity.dart';
 import 'package:story_app_dicoding/features/auth/domain/entities/login_results.dart';
 
@@ -7,13 +6,13 @@ class LoginResponse extends LoginEntity {
     bool? error,
     String? message,
     LoginResultsResponse? loginResults,
-  });
+  }) : super(error: error, message: message, loginResult: loginResults);
 
   factory LoginResponse.fromJson(Map<String, dynamic> map) {
     return LoginResponse(
-      error: map['error'] ?? "",
-      message: map['message'] ?? "",
-      loginResults: LoginResultsResponse.fromJson(map['loginResult'] ?? ""),
+      error: (map['error'] ?? false) as bool,
+      message: (map['message'] ?? '') as String,
+      loginResults: LoginResultsResponse.fromJson(map['loginResult']),
     );
   }
 }
@@ -33,22 +32,18 @@ class LoginDataModel {
       };
 }
 
-class LoginResultsResponse {
-  final String userId;
-  final String name;
-  final String token;
-
+class LoginResultsResponse extends LoginResults {
   LoginResultsResponse({
-    required this.userId,
-    required this.name,
-    required this.token,
-  });
+    String? userId,
+    String? name,
+    String? token,
+  }) : super(name: name, userId: userId, token: token);
 
   factory LoginResultsResponse.fromJson(Map<String, dynamic> json) {
     return LoginResultsResponse(
-      userId: json['userId'],
-      name: json['name'],
-      token: json['token'],
+      userId: (json['userId'] ?? '') as String,
+      name: (json['name'] ?? '') as String,
+      token: (json['token'] ?? '') as String,
     );
   }
 }

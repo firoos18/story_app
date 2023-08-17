@@ -7,13 +7,11 @@ part 'login_api_service.g.dart';
 
 @RestApi(baseUrl: storyApiBaseUrl)
 abstract class LoginApiService {
-  factory LoginApiService(Dio dio) = _LoginApiService;
+  factory LoginApiService(Dio dio, {String baseUrl}) = _LoginApiService;
 
   @POST('/login')
   Future<HttpResponse<LoginResponse>> getLoginData({
     @Header('Content-Type') String contentType = 'application/json',
-    // @Header('email') required String email,
-    // @Header('password') required String password,
     @Body() required LoginDataModel loginDataModel,
   });
 }

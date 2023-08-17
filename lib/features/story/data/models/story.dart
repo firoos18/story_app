@@ -9,7 +9,15 @@ class StoryModel extends StoryEntity {
     String? photoUrl,
     double? lat,
     double? lon,
-  });
+  }) : super(
+          id: id,
+          createdAt: createdAt,
+          description: description,
+          name: name,
+          photoUrl: photoUrl,
+          lat: lat,
+          lon: lon,
+        );
 
   factory StoryModel.fromJson(Map<String, dynamic> map) {
     return StoryModel(
