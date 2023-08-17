@@ -8,12 +8,11 @@ import 'package:story_app_dicoding/features/auth/domain/repository/login_reposit
 class GetLoginDataUseCase
     implements UseCase<DataState<LoginEntity>, LoginDataModel?> {
   final LoginRepository _loginRepository;
-  final LoginDataModel _loginDataModel;
 
-  GetLoginDataUseCase(this._loginRepository, this._loginDataModel);
+  GetLoginDataUseCase(this._loginRepository);
 
   @override
-  Future<DataState<LoginEntity>> call({params}) {
-    return _loginRepository.getLoginData(_loginDataModel);
+  Future<DataState<LoginEntity>> call({LoginDataModel? params}) {
+    return _loginRepository.getLoginData(params!);
   }
 }

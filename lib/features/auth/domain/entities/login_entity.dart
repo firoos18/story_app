@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:story_app_dicoding/features/auth/domain/entities/login_results.dart';
 
 class LoginEntity extends Equatable {
-  final String? error;
+  final bool? error;
   final String? message;
   final LoginResults? loginResult;
 

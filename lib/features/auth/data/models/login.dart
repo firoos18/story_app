@@ -4,16 +4,16 @@ import 'package:story_app_dicoding/features/auth/domain/entities/login_results.d
 
 class LoginResponse extends LoginEntity {
   const LoginResponse({
-    String? error,
+    bool? error,
     String? message,
-    LoginResults? loginResults,
+    LoginResultsResponse? loginResults,
   });
 
   factory LoginResponse.fromJson(Map<String, dynamic> map) {
     return LoginResponse(
-      error: map['error'],
-      message: map['message'],
-      loginResults: map['loginResult'],
+      error: map['error'] ?? "",
+      message: map['message'] ?? "",
+      loginResults: LoginResultsResponse.fromJson(map['loginResult'] ?? ""),
     );
   }
 }
@@ -31,4 +31,24 @@ class LoginDataModel {
         'email': email,
         'password': password,
       };
+}
+
+class LoginResultsResponse {
+  final String userId;
+  final String name;
+  final String token;
+
+  LoginResultsResponse({
+    required this.userId,
+    required this.name,
+    required this.token,
+  });
+
+  factory LoginResultsResponse.fromJson(Map<String, dynamic> json) {
+    return LoginResultsResponse(
+      userId: json['userId'],
+      name: json['name'],
+      token: json['token'],
+    );
+  }
 }

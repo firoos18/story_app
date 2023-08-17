@@ -14,10 +14,10 @@ class LoginRepositoryImpl implements LoginRepository {
 
   @override
   Future<DataState<LoginResponse>> getLoginData(
-      final LoginDataModel loginDataModel) async {
+      LoginDataModel? loginDataModel) async {
     try {
       final httpResponse = await _loginApiService.getLoginData(
-        loginDataModel: loginDataModel,
+        loginDataModel: loginDataModel!,
       );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
