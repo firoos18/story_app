@@ -26,8 +26,31 @@ class StoryModel extends StoryEntity {
       description: map['description'] ?? "",
       createdAt: map['createdAt'] ?? "",
       photoUrl: map['photoUrl'] ?? "",
-      lon: map['lon'] ?? "",
-      lat: map['lat'] ?? "",
+      lon: map['lon'],
+      lat: map['lat'],
+    );
+  }
+}
+
+class StoryResponseModel extends StoryResponseEntity {
+  const StoryResponseModel({
+    bool? error,
+    String? message,
+    List<StoryModel>? listStory,
+  }) : super(
+          error: error,
+          message: message,
+          listStory: listStory,
+        );
+
+  factory StoryResponseModel.fromJson(Map<String, dynamic> json) {
+    return StoryResponseModel(
+      error: json['error'],
+      message: json['message'],
+      listStory: List<StoryModel>.from(
+        (json['listStory'] as List<dynamic>)
+            .map((e) => StoryModel.fromJson(e as Map<String, dynamic>)),
+      ),
     );
   }
 }

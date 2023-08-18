@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:story_app_dicoding/core/resources/data_state.dart';
 import 'package:story_app_dicoding/features/story/data/data_sources/remote/story_api_service.dart';
 import 'package:story_app_dicoding/features/story/data/models/story.dart';
@@ -11,11 +12,20 @@ class StoryRepositoryImpl implements StoryRepository {
   StoryRepositoryImpl(this._storyApiService);
 
   @override
-  Future<DataState<List<StoryModel>>> getStoriesData() async {
+  Future<DataState<StoryResponseModel>> getStoriesData({
+    int? page,
+    int? size,
+    int? location,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
     try {
       final httpResponse = await _storyApiService.getStoriesData(
-        token:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLWpOT2xWNDh3enpCcWVzRzAiLCJpYXQiOjE2OTIxMTM1NzZ9.7iPlToaMDkWi9MZL_MABqZmwFFU4CABFZq8-N9Bd02Y",
+        token: "Bearer $token",
+        page: page,
+        size: size,
+        location: location,
       );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {

@@ -21,7 +21,7 @@ class _StoryApiService implements StoryApiService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<List<StoryModel>>> getStoriesData({
+  Future<HttpResponse<StoryResponseModel>> getStoriesData({
     required String token,
     int? page,
     int? size,
@@ -38,7 +38,7 @@ class _StoryApiService implements StoryApiService {
     _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<List<StoryModel>>>(Options(
+        _setStreamType<HttpResponse<StoryResponseModel>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -54,9 +54,7 @@ class _StoryApiService implements StoryApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    List<StoryModel> value = _result.data!['listStory']
-        .map((dynamic i) => StoryModel.fromJson(i as Map<String, dynamic>))
-        .toList();
+    final value = StoryResponseModel.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

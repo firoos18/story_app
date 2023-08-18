@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:story_app_dicoding/features/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:story_app_dicoding/features/auth/presentation/screens/auth_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:story_app_dicoding/features/story/presentation/bloc/stories_bloc.dart';
 import 'package:story_app_dicoding/features/story/presentation/screens/story_screen.dart';
 import 'package:story_app_dicoding/injection_container.dart';
 
@@ -28,6 +29,9 @@ class MainApp extends StatelessWidget {
         BlocProvider<AuthBloc>(
           create: (context) => sl(),
         ),
+        BlocProvider<StoriesBloc>(
+          create: (context) => sl()..add(const GetStories()),
+        ),
       ],
       child: MaterialApp(
           theme: ThemeData(useMaterial3: true),
@@ -42,7 +46,7 @@ class MainApp extends StatelessWidget {
               } else if (state is AuthLoggedIn) {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                    builder: (ctx) => const StoryScreen(),
+                    builder: (ctx) => StoryScreen(),
                   ),
                 );
               } else if (state is AuthLoading) {
@@ -73,7 +77,7 @@ class MainApp extends StatelessWidget {
               context.read<AuthBloc>().add(OnAppOpened(token: token));
 
               if (token != null && state is Authenticated) {
-                return const StoryScreen();
+                return StoryScreen();
               } else {
                 return const AuthScreen();
               }

@@ -30,3 +30,22 @@ class StoryEntity extends Equatable {
         lon,
       ];
 }
+
+class StoryResponseEntity extends Equatable {
+  final bool? error;
+  final String? message;
+  final List<StoryEntity>? listStory;
+
+  const StoryResponseEntity({
+    this.error,
+    this.listStory,
+    this.message,
+  });
+
+  @override
+  List<Object?> get props => [
+        error,
+        message,
+        listStory,
+      ];
+}

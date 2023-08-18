@@ -1,7 +1,7 @@
 part of 'stories_bloc.dart';
 
 sealed class StoriesState extends Equatable {
-  final List<StoryEntity>? stories;
+  final StoryResponseEntity? stories;
   final DioException? error;
 
   const StoriesState({this.error, this.stories});
@@ -15,7 +15,7 @@ class StoriesLoading extends StoriesState {
 }
 
 class StoriesLoaded extends StoriesState {
-  const StoriesLoaded(List<StoryEntity> stories) : super(stories: stories);
+  const StoriesLoaded(StoryResponseEntity stories) : super(stories: stories);
 }
 
 class StoriesError extends StoriesState {

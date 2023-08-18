@@ -7,10 +7,10 @@ part 'story_api_service.g.dart';
 
 @RestApi(baseUrl: storyApiBaseUrl)
 abstract class StoryApiService {
-  factory StoryApiService(Dio dio) = _StoryApiService;
+  factory StoryApiService(Dio dio, {String? baseUrl}) = _StoryApiService;
 
   @GET('/stories')
-  Future<HttpResponse<List<StoryModel>>> getStoriesData({
+  Future<HttpResponse<StoryResponseModel>> getStoriesData({
     @Header('Authorization') required String token,
     @Query('page') int? page,
     @Query('size') int? size,
