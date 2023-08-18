@@ -4,8 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:story_app_dicoding/core/resources/data_state.dart';
 import 'package:story_app_dicoding/features/auth/data/data_sources/register_api_service.dart';
 import 'package:story_app_dicoding/features/auth/data/models/register.dart';
-import 'package:story_app_dicoding/features/auth/domain/entities/register_data_entity.dart';
-import 'package:story_app_dicoding/features/auth/domain/entities/register_entity.dart';
 import 'package:story_app_dicoding/features/auth/domain/repository/register_repository.dart';
 
 class RegisterRepositoryImpl implements RegisterRepository {

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:story_app_dicoding/features/auth/data/data_sources/login_api_service.dart';
 import 'package:story_app_dicoding/features/auth/data/data_sources/register_api_service.dart';
 import 'package:story_app_dicoding/features/auth/data/models/login.dart';
@@ -8,11 +9,12 @@ import 'package:story_app_dicoding/features/auth/data/repository/login_repositor
 import 'package:story_app_dicoding/features/auth/data/repository/register_respository_impl.dart';
 import 'package:story_app_dicoding/features/auth/domain/repository/login_repository.dart';
 import 'package:story_app_dicoding/features/auth/domain/repository/register_repository.dart';
+import 'package:story_app_dicoding/features/auth/domain/usecases/delete_token_usecase.dart';
 import 'package:story_app_dicoding/features/auth/domain/usecases/get_login_data.dart';
+import 'package:story_app_dicoding/features/auth/domain/usecases/has_token_usecase.dart';
 import 'package:story_app_dicoding/features/auth/domain/usecases/register_user.dart';
+import 'package:story_app_dicoding/features/auth/domain/usecases/save_user_token.dart';
 import 'package:story_app_dicoding/features/auth/presentation/bloc/auth/auth_bloc.dart';
-import 'package:story_app_dicoding/features/auth/presentation/bloc/login/login_bloc.dart';
-import 'package:story_app_dicoding/features/auth/presentation/bloc/register/register_bloc.dart';
 import 'package:story_app_dicoding/features/story/data/data_sources/remote/story_api_service.dart';
 import 'package:story_app_dicoding/features/story/data/repository/story_repository_impl.dart';
 import 'package:story_app_dicoding/features/story/domain/repository/story_repository.dart';
@@ -56,18 +58,22 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<GetLoginDataUseCase>(
     GetLoginDataUseCase(sl()),
   );
+  sl.registerSingleton<SaveUserTokenUseCase>(
+    SaveUserTokenUseCase(sl()),
+  );
+  sl.registerSingleton<HasTokenUseCase>(
+    HasTokenUseCase(sl()),
+  );
+  sl.registerSingleton<DeleteTokenUseCase>(
+    DeleteTokenUseCase(sl()),
+  );
 
   // Blocs
   sl.registerFactory<StoriesBloc>(
     () => StoriesBloc(sl()),
   );
-  sl.registerFactory<RegisterBloc>(
-    () => RegisterBloc(sl(), sl(), sl()),
-  );
-  sl.registerFactory<LoginBloc>(
-    () => LoginBloc(sl(), sl(), sl()),
-  );
+
   sl.registerFactory<AuthBloc>(
-    () => AuthBloc(sl(), sl()),
+    () => AuthBloc(sl(), sl(), sl(), sl()),
   );
 }

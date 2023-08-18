@@ -3,19 +3,35 @@ part of 'auth_bloc.dart';
 sealed class AuthState extends Equatable {
   final LoginEntity? loginEntity;
   final RegisterEntity? registerEntity;
-  final DioException? dioException;
+  final String? error;
+  final bool? hasToken;
+  final String? token;
 
-  const AuthState({this.dioException, this.loginEntity, this.registerEntity});
+  const AuthState(
+      {this.loginEntity,
+      this.registerEntity,
+      this.hasToken,
+      this.token,
+      this.error});
 
   @override
-  List<Object?> get props => [dioException];
+  List<Object?> get props =>
+      [registerEntity, loginEntity, hasToken, token, error];
 }
 
 final class AuthInitial extends AuthState {}
 
-final class IsAuthenticated extends AuthState {}
+final class IsAuthenticated extends AuthState {
+  const IsAuthenticated(final bool? hasToken) : super(hasToken: hasToken);
+}
+
+final class Authenticated extends AuthState {}
 
 final class AuthLoading extends AuthState {}
+
+final class AuthToken extends AuthState {
+  const AuthToken(final String? token) : super(token: token);
+}
 
 final class AuthLoggedIn extends AuthState {
   const AuthLoggedIn(final LoginEntity loginEntity)
@@ -28,5 +44,5 @@ final class AuthRegistered extends AuthState {
 }
 
 final class AuthError extends AuthState {
-  const AuthError(final DioException error) : super(dioException: error);
+  const AuthError(final String error) : super(error: error);
 }

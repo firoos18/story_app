@@ -1,9 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:story_app_dicoding/features/auth/presentation/bloc/auth/auth_bloc.dart';
-import 'package:story_app_dicoding/features/auth/presentation/bloc/login/login_bloc.dart';
-import 'package:story_app_dicoding/features/auth/presentation/bloc/register/register_bloc.dart';
-import 'package:story_app_dicoding/injection_container.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
