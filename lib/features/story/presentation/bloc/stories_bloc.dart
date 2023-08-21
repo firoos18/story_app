@@ -12,48 +12,28 @@ part 'stories_state.dart';
 class StoriesBloc extends BlocWithState<StoriesEvent, StoriesState> {
   final GetStoriesUseCase _getStoriesUseCase;
 
-  int page = 2;
-  int size = 20;
-  bool isFetching = false;
-
   StoriesBloc(this._getStoriesUseCase) : super(const StoriesLoading()) {
     on<GetStories>(onGetStories);
   }
+  final List<StoryEntity> _stories = [];
+  int _page = 1;
+  final int _pageSize = 15;
 
-  void onGetStories(GetStories event, Emitter<StoriesState> emit) async {
-    final dataState = await _getStoriesUseCase(
-      page: page,
-      size: size,
-      location: 1,
-    );
+  void onGetStories(StoriesEvent event, Emitter<StoriesState> emit) async {
+    final dataState =
+        await _getStoriesUseCase(page: _page, size: _pageSize, location: 0);
 
-    if (dataState is DataSuccess) {
-      emit(StoriesLoaded(dataState.data!));
-      page += 1;
+    if (dataState is DataSuccess && dataState.data!.listStory!.isNotEmpty) {
+      final stories = dataState.data!.listStory;
+      final noMoreData = stories!.length < _pageSize;
+      _stories.addAll(stories);
+      _page++;
+
+      emit(StoriesLoaded(_stories, noMoreData));
     }
 
     if (dataState is DataFailed) {
-      print(dataState.exception);
       emit(StoriesError(dataState.exception!));
     }
   }
-
-  // @override
-  // Stream<StoriesState> mapEventToState(StoriesEvent event) async* {
-  //   if (event is GetStories) yield* _getStoriesData(event);
-  // }
-
-  // Stream<StoriesState> _getStoriesData(StoriesEvent event) async* {
-  //   yield* runBlocProcess(() async* {
-  //     final dataState = await _getStoriesUseCase();
-
-  //     if (dataState is DataSuccess && dataState.data!.isNotEmpty) {
-  //       yield StoriesLoaded(dataState.data!);
-  //     }
-
-  //     if (dataState is DataFailed) {
-  //       yield StoriesError(dataState.exception!);
-  //     }
-  //   });
-  // }
 }

@@ -1,13 +1,15 @@
 part of 'stories_bloc.dart';
 
 sealed class StoriesState extends Equatable {
-  final StoryResponseEntity? stories;
+  // final StoryResponseEntity? stories;
+  final List<StoryEntity>? stories;
+  final bool? noMoreData;
   final DioException? error;
 
-  const StoriesState({this.error, this.stories});
+  const StoriesState({this.error, this.stories, this.noMoreData});
 
   @override
-  List<Object> get props => [stories!, error!];
+  List<Object?> get props => [stories, error, noMoreData];
 }
 
 class StoriesLoading extends StoriesState {
@@ -15,7 +17,8 @@ class StoriesLoading extends StoriesState {
 }
 
 class StoriesLoaded extends StoriesState {
-  const StoriesLoaded(StoryResponseEntity stories) : super(stories: stories);
+  const StoriesLoaded(List<StoryEntity> stories, bool? noMoreData)
+      : super(stories: stories, noMoreData: noMoreData);
 }
 
 class StoriesError extends StoriesState {

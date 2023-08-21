@@ -1,87 +1,88 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:story_app_dicoding/core/bloc/bloc_with_state.dart';
 import 'package:story_app_dicoding/features/story/domain/entities/story_entity.dart';
 import 'package:story_app_dicoding/features/story/presentation/bloc/stories_bloc.dart';
 
-class StoryScreen extends StatelessWidget {
-  final List<StoryEntity> _stories = [];
-  final ScrollController _scrollController = ScrollController();
-
-  StoryScreen({super.key});
+class StoryScreen extends HookWidget {
+  const StoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final scrollController = useScrollController();
+
+    useEffect(() {
+      scrollController
+          .addListener(() => _onScrollListener(context, scrollController));
+      return scrollController.dispose;
+    }, [scrollController]);
+
     return Scaffold(
-      body: _buildBody(),
+      body: _buildBody(scrollController),
     );
   }
 
-  Widget _buildBody() {
-    return BlocConsumer<StoriesBloc, StoriesState>(listener: (context, state) {
-      if (state is StoriesLoading) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Loading Stories!'),
-          ),
-        );
-      } else if (state is StoriesLoaded && state.stories!.listStory!.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('All Stories Loaded!'),
-          ),
-        );
-      }
-    }, builder: (context, state) {
+  Widget _buildBody(ScrollController scrollController) {
+    return BlocBuilder<StoriesBloc, StoriesState>(builder: (_, state) {
       if (state is StoriesLoading) {
         return const Center(
-          child: CircularProgressIndicator(),
+          child: CupertinoActivityIndicator(),
+        );
+      } else if (state is StoriesError) {
+        return const Center(
+          child: Icon(Icons.refresh),
         );
       } else if (state is StoriesLoaded) {
-        // return ListView.builder(
-        //   itemCount: state.stories!.listStory!.length,
-        //   itemBuilder: (ctx, index) {
-        //     final stories = state.stories!.listStory;
-        //     return ListTile(
-        //       title: Text(stories![index].name!),
-        //       leading: Image.network(
-        //         stories[index].photoUrl!,
-        //         width: 52,
-        //         height: 52,
-        //         fit: BoxFit.cover,
-        //       ),
-        //     );
-        //   },
-        // );
-        _stories.addAll(state.stories!.listStory!);
-        context.read<StoriesBloc>().isFetching = false;
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        return _buildStories(scrollController, state.stories, state.noMoreData);
       }
-      return ListView.builder(
-          controller: _scrollController
-            ..addListener(() {
-              if (_scrollController.offset ==
-                  _scrollController.position.maxScrollExtent) {
-                context.read<StoriesBloc>()
-                  ..isFetching = true
-                  ..add(const GetStories());
-              }
-            }),
-          itemCount: _stories.length,
-          itemBuilder: (ctx, index) {
-            return ListTile(
-              onTap: () {
-                print(_stories[index].id);
-              },
-              title: Text(_stories[index].name!),
-              leading: Image.network(
-                _stories[index].photoUrl!,
-                fit: BoxFit.cover,
-                width: 56,
-                height: 56,
-              ),
-              subtitle: Text(_stories[index].description!),
-            );
-          });
+      return const SizedBox();
     });
+  }
+
+  Widget _buildStories(ScrollController scrollController,
+      List<StoryEntity>? stories, bool? noMoreData) {
+    return ListView(
+      controller: scrollController,
+      children: [
+        ...List<Widget>.from(
+          stories!.map(
+            (e) => Builder(
+              builder: (context) => ListTile(
+                title: Text(e.name!),
+                leading: Image.network(
+                  e.photoUrl!,
+                  width: 36,
+                  height: 36,
+                  fit: BoxFit.cover,
+                ),
+                subtitle: Text(e.description!),
+              ),
+            ),
+          ),
+        ),
+        if (noMoreData!) ...[
+          const SizedBox(),
+        ] else ...[
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 14),
+            child: CupertinoActivityIndicator(),
+          )
+        ]
+      ],
+    );
+  }
+
+  void _onScrollListener(
+      BuildContext context, ScrollController scrollController) {
+    final maxScroll = scrollController.position.maxScrollExtent;
+    final currentScroll = scrollController.position.pixels;
+    final storiesBloc = BlocProvider.of<StoriesBloc>(context);
+    final state = storiesBloc.blocProcessState;
+
+    if (currentScroll == maxScroll) {
+      storiesBloc.add(const GetStories());
+    }
   }
 }
