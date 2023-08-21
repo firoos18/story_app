@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:story_app_dicoding/features/auth/data/data_sources/login_api_service.dart';
 import 'package:story_app_dicoding/features/auth/data/data_sources/register_api_service.dart';
 import 'package:story_app_dicoding/features/auth/data/models/login.dart';
@@ -20,6 +19,11 @@ import 'package:story_app_dicoding/features/story/data/repository/story_reposito
 import 'package:story_app_dicoding/features/story/domain/repository/story_repository.dart';
 import 'package:story_app_dicoding/features/story/domain/usecases/get_stories.dart';
 import 'package:story_app_dicoding/features/story/presentation/bloc/stories_bloc.dart';
+import 'package:story_app_dicoding/features/story_detail/data/data_sources/remote/story_detail_api_service.dart';
+import 'package:story_app_dicoding/features/story_detail/data/repository/story_detail_repository_impl.dart';
+import 'package:story_app_dicoding/features/story_detail/domain/repository/story_detail_repository.dart';
+import 'package:story_app_dicoding/features/story_detail/domain/usecase/get_story_detail_usecase.dart';
+import 'package:story_app_dicoding/features/story_detail/presentation/bloc/story_detail_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -37,6 +41,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<StoryApiService>(StoryApiService(sl()));
   sl.registerSingleton<RegisterApiService>(RegisterApiService(sl()));
   sl.registerSingleton<LoginApiService>(LoginApiService(sl()));
+  sl.registerSingleton<StoryDetailApiService>(StoryDetailApiService(sl()));
 
   sl.registerSingleton<StoryRepository>(
     StoryRepositoryImpl(sl()),
@@ -46,6 +51,9 @@ Future<void> initializeDependencies() async {
   );
   sl.registerSingleton<LoginRepository>(
     LoginRepositoryImpl(sl()),
+  );
+  sl.registerSingleton<StoryDetailRepository>(
+    StoryDetailRepositoryImpl(sl()),
   );
 
   // Use Cases
@@ -67,13 +75,18 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<DeleteTokenUseCase>(
     DeleteTokenUseCase(sl()),
   );
+  sl.registerSingleton<GetStoryDetailUseCase>(
+    GetStoryDetailUseCase(sl()),
+  );
 
   // Blocs
   sl.registerFactory<StoriesBloc>(
     () => StoriesBloc(sl()),
   );
-
   sl.registerFactory<AuthBloc>(
     () => AuthBloc(sl(), sl(), sl(), sl()),
+  );
+  sl.registerFactory<StoryDetailBloc>(
+    () => StoryDetailBloc(sl()),
   );
 }

@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:story_app_dicoding/core/bloc/bloc_with_state.dart';
 import 'package:story_app_dicoding/features/story/domain/entities/story_entity.dart';
 import 'package:story_app_dicoding/features/story/presentation/bloc/stories_bloc.dart';
+import 'package:story_app_dicoding/features/story_detail/presentation/bloc/story_detail_bloc.dart';
+import 'package:story_app_dicoding/features/story_detail/presentation/screens/story_detail_screen.dart';
 
 class StoryScreen extends HookWidget {
   const StoryScreen({super.key});
@@ -50,11 +51,20 @@ class StoryScreen extends HookWidget {
           stories!.map(
             (e) => Builder(
               builder: (context) => ListTile(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (ctx) => StoryDetailScreen(
+                        storyId: e.id!,
+                      ),
+                    ),
+                  );
+                },
                 title: Text(e.name!),
                 leading: Image.network(
                   e.photoUrl!,
-                  width: 36,
-                  height: 36,
+                  width: 52,
+                  height: 52,
                   fit: BoxFit.cover,
                 ),
                 subtitle: Text(e.description!),
@@ -79,7 +89,6 @@ class StoryScreen extends HookWidget {
     final maxScroll = scrollController.position.maxScrollExtent;
     final currentScroll = scrollController.position.pixels;
     final storiesBloc = BlocProvider.of<StoriesBloc>(context);
-    final state = storiesBloc.blocProcessState;
 
     if (currentScroll == maxScroll) {
       storiesBloc.add(const GetStories());

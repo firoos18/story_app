@@ -5,6 +5,7 @@ import 'package:story_app_dicoding/features/auth/presentation/screens/auth_scree
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:story_app_dicoding/features/story/presentation/bloc/stories_bloc.dart';
 import 'package:story_app_dicoding/features/story/presentation/screens/story_screen.dart';
+import 'package:story_app_dicoding/features/story_detail/presentation/bloc/story_detail_bloc.dart';
 import 'package:story_app_dicoding/injection_container.dart';
 
 Future<void> main() async {
@@ -32,6 +33,9 @@ class MainApp extends StatelessWidget {
         BlocProvider<StoriesBloc>(
           create: (_) => sl()..add(const GetStories()),
         ),
+        BlocProvider<StoryDetailBloc>(
+          create: (_) => sl(),
+        ),
       ],
       child: MaterialApp(
           theme: ThemeData(useMaterial3: true),
@@ -46,7 +50,7 @@ class MainApp extends StatelessWidget {
               } else if (state is AuthLoggedIn) {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                    builder: (ctx) => StoryScreen(),
+                    builder: (ctx) => const StoryScreen(),
                   ),
                 );
               } else if (state is AuthLoading) {
