@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class StoryCard extends StatelessWidget {
   final String photoUrl;
@@ -64,7 +65,7 @@ class StoryCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    createdAt,
+                    timeago.format(DateTime.parse(createdAt)),
                     style: TextStyle(
                       fontWeight: FontWeight.w300,
                       fontSize: 8,

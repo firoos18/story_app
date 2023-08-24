@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:story_app_dicoding/features/story/domain/entities/story_entity.dart';
 import 'package:story_app_dicoding/features/story/presentation/bloc/stories_bloc.dart';
 import 'package:story_app_dicoding/features/story/presentation/widgets/story_card.dart';
+import 'package:story_app_dicoding/features/story_detail/presentation/screens/story_detail_screen.dart';
 
 class StoryScreen extends HookWidget {
   const StoryScreen({super.key});
@@ -21,7 +22,7 @@ class StoryScreen extends HookWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xffFFFBFF),
-      body: _buildBody(scrollController),
+      body: _buildBody(scrollController, context),
       appBar: AppBar(
         forceMaterialTransparency: true,
         centerTitle: true,
@@ -36,7 +37,7 @@ class StoryScreen extends HookWidget {
     );
   }
 
-  Widget _buildBody(ScrollController scrollController) {
+  Widget _buildBody(ScrollController scrollController, BuildContext context) {
     return BlocBuilder<StoriesBloc, StoriesState>(builder: (_, state) {
       if (state is StoriesLoading) {
         return const Center(
@@ -49,26 +50,40 @@ class StoryScreen extends HookWidget {
       } else if (state is StoriesLoaded) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: _homeBuild(state.stories, scrollController, state.noMoreData),
+          child: _homeBuild(
+              state.stories, scrollController, state.noMoreData, context),
         );
       }
       return const SizedBox();
     });
   }
 
-  Widget _buildStories(ScrollController scrollController,
-      List<StoryEntity>? stories, bool? noMoreData) {
+  Widget _buildStories(
+    ScrollController scrollController,
+    List<StoryEntity>? stories,
+    bool? noMoreData,
+    BuildContext context,
+  ) {
     return ListView(
       controller: scrollController,
       children: [
         ...List<Widget>.from(
           stories!.map(
             (e) => Builder(
-              builder: (context) => StoryCard(
-                description: e.description!,
-                name: e.name!,
-                photoUrl: e.photoUrl!,
-                createdAt: e.createdAt!,
+              builder: (context) => GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (ctx) => StoryDetailScreen(storyId: e.id!),
+                    ),
+                  );
+                },
+                child: StoryCard(
+                  description: e.description!,
+                  name: e.name!,
+                  photoUrl: e.photoUrl!,
+                  createdAt: e.createdAt!,
+                ),
               ),
             ),
           ),
@@ -137,11 +152,16 @@ class StoryScreen extends HookWidget {
     );
   }
 
-  Widget _homeBuild(List<StoryEntity>? stories,
-      ScrollController scrollController, bool? noMoreData) {
+  Widget _homeBuild(
+    List<StoryEntity>? stories,
+    ScrollController scrollController,
+    bool? noMoreData,
+    BuildContext context,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: 36),
         const Text(
           'Recents',
           style: TextStyle(
@@ -158,7 +178,16 @@ class StoryScreen extends HookWidget {
             itemCount: 5,
             itemBuilder: (ctx, index) => Container(
               margin: const EdgeInsets.only(right: 8),
-              child: _recentStoryList(stories![index]),
+              child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (ctx) =>
+                            StoryDetailScreen(storyId: stories[index].id!),
+                      ),
+                    );
+                  },
+                  child: _recentStoryList(stories![index])),
             ),
           ),
         ),
@@ -171,7 +200,9 @@ class StoryScreen extends HookWidget {
             color: Color(0xff201A1B),
           ),
         ),
-        Expanded(child: _buildStories(scrollController, stories, noMoreData)),
+        Expanded(
+            child:
+                _buildStories(scrollController, stories, noMoreData, context)),
       ],
     );
   }
