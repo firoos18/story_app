@@ -4,8 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:story_app_dicoding/features/story/domain/entities/story_entity.dart';
 import 'package:story_app_dicoding/features/story/presentation/bloc/stories_bloc.dart';
-import 'package:story_app_dicoding/features/story_detail/presentation/bloc/story_detail_bloc.dart';
-import 'package:story_app_dicoding/features/story_detail/presentation/screens/story_detail_screen.dart';
+import 'package:story_app_dicoding/features/story/presentation/widgets/story_card.dart';
 
 class StoryScreen extends HookWidget {
   const StoryScreen({super.key});
@@ -21,7 +20,19 @@ class StoryScreen extends HookWidget {
     }, [scrollController]);
 
     return Scaffold(
+      backgroundColor: const Color(0xffFFFBFF),
       body: _buildBody(scrollController),
+      appBar: AppBar(
+        forceMaterialTransparency: true,
+        centerTitle: true,
+        title: const Text(
+          'Home',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color(0xff201A1B),
+          ),
+        ),
+      ),
     );
   }
 
@@ -36,7 +47,10 @@ class StoryScreen extends HookWidget {
           child: Icon(Icons.refresh),
         );
       } else if (state is StoriesLoaded) {
-        return _buildStories(scrollController, state.stories, state.noMoreData);
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: _homeBuild(state.stories, scrollController, state.noMoreData),
+        );
       }
       return const SizedBox();
     });
@@ -50,24 +64,11 @@ class StoryScreen extends HookWidget {
         ...List<Widget>.from(
           stories!.map(
             (e) => Builder(
-              builder: (context) => ListTile(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (ctx) => StoryDetailScreen(
-                        storyId: e.id!,
-                      ),
-                    ),
-                  );
-                },
-                title: Text(e.name!),
-                leading: Image.network(
-                  e.photoUrl!,
-                  width: 52,
-                  height: 52,
-                  fit: BoxFit.cover,
-                ),
-                subtitle: Text(e.description!),
+              builder: (context) => StoryCard(
+                description: e.description!,
+                name: e.name!,
+                photoUrl: e.photoUrl!,
+                createdAt: e.createdAt!,
               ),
             ),
           ),
@@ -93,5 +94,85 @@ class StoryScreen extends HookWidget {
     if (currentScroll == maxScroll) {
       storiesBloc.add(const GetStories());
     }
+  }
+
+  Widget _recentStoryList(StoryEntity story) {
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image.network(
+            story.photoUrl!,
+            height: 210,
+            width: 175,
+            fit: BoxFit.cover,
+          ),
+        ),
+        Positioned(
+          bottom: 15,
+          left: 15,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                story.name!,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                  color: Color(0xffFFFBFF),
+                ),
+              ),
+              Text(
+                story.description!,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w300,
+                  fontSize: 8,
+                  color: Color(0xffFFFBFF),
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _homeBuild(List<StoryEntity>? stories,
+      ScrollController scrollController, bool? noMoreData) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Recents',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w500,
+            color: Color(0xff201A1B),
+          ),
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          height: 210,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 5,
+            itemBuilder: (ctx, index) => Container(
+              margin: const EdgeInsets.only(right: 8),
+              child: _recentStoryList(stories![index]),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        const Text(
+          'All Stories',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w500,
+            color: Color(0xff201A1B),
+          ),
+        ),
+        Expanded(child: _buildStories(scrollController, stories, noMoreData)),
+      ],
+    );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:story_app_dicoding/features/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:story_app_dicoding/features/auth/presentation/screens/auth_screen.dart';
@@ -38,7 +39,10 @@ class MainApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-          theme: ThemeData(useMaterial3: true),
+          theme: ThemeData(
+            useMaterial3: true,
+            textTheme: GoogleFonts.poppinsTextTheme(),
+          ),
           home: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {
               if (state is AuthInitial) {

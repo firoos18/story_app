@@ -16,7 +16,7 @@ class StoriesBloc extends BlocWithState<StoriesEvent, StoriesState> {
     on<GetStories>(onGetStories);
   }
   final List<StoryEntity> _stories = [];
-  int _page = 1;
+  int _page = 2;
   final int _pageSize = 15;
 
   void onGetStories(StoriesEvent event, Emitter<StoriesState> emit) async {

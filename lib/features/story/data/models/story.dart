@@ -26,8 +26,8 @@ class StoryModel extends StoryEntity {
       description: map['description'] ?? "",
       createdAt: map['createdAt'] ?? "",
       photoUrl: map['photoUrl'] ?? "",
-      lon: map['lon'],
-      lat: map['lat'],
+      lon: map['lon'] ?? 0.0,
+      lat: map['lat'] ?? 0.0,
     );
   }
 }
