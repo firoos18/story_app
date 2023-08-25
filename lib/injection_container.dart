@@ -14,6 +14,7 @@ import 'package:story_app_dicoding/features/auth/domain/usecases/has_token_useca
 import 'package:story_app_dicoding/features/auth/domain/usecases/register_user.dart';
 import 'package:story_app_dicoding/features/auth/domain/usecases/save_user_token.dart';
 import 'package:story_app_dicoding/features/auth/presentation/bloc/auth/auth_bloc.dart';
+import 'package:story_app_dicoding/features/navbar/presentation/bloc/navigation_bloc.dart';
 import 'package:story_app_dicoding/features/story/data/data_sources/remote/story_api_service.dart';
 import 'package:story_app_dicoding/features/story/data/repository/story_repository_impl.dart';
 import 'package:story_app_dicoding/features/story/domain/repository/story_repository.dart';
@@ -88,5 +89,8 @@ Future<void> initializeDependencies() async {
   );
   sl.registerFactory<StoryDetailBloc>(
     () => StoryDetailBloc(sl()),
+  );
+  sl.registerFactory<NavigationBloc>(
+    () => NavigationBloc(),
   );
 }

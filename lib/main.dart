@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:story_app_dicoding/features/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:story_app_dicoding/features/auth/presentation/screens/auth_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:story_app_dicoding/features/navbar/presentation/bloc/navigation_bloc.dart';
+import 'package:story_app_dicoding/features/navbar/presentation/screens/navigation_screen.dart';
 import 'package:story_app_dicoding/features/story/presentation/bloc/stories_bloc.dart';
 import 'package:story_app_dicoding/features/story/presentation/screens/story_screen.dart';
 import 'package:story_app_dicoding/features/story_detail/presentation/bloc/story_detail_bloc.dart';
@@ -35,6 +37,9 @@ class MainApp extends StatelessWidget {
           create: (_) => sl()..add(const GetStories()),
         ),
         BlocProvider<StoryDetailBloc>(
+          create: (_) => sl(),
+        ),
+        BlocProvider<NavigationBloc>(
           create: (_) => sl(),
         ),
       ],
@@ -85,7 +90,7 @@ class MainApp extends StatelessWidget {
               context.read<AuthBloc>().add(OnAppOpened(token: token));
 
               if (token != null && state is Authenticated) {
-                return StoryScreen();
+                return const NavigationScreen();
               } else {
                 return const AuthScreen();
               }

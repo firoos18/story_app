@@ -20,21 +20,7 @@ class StoryScreen extends HookWidget {
       return scrollController.dispose;
     }, [scrollController]);
 
-    return Scaffold(
-      backgroundColor: const Color(0xffFFFBFF),
-      body: _buildBody(scrollController, context),
-      appBar: AppBar(
-        forceMaterialTransparency: true,
-        centerTitle: true,
-        title: const Text(
-          'Home',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Color(0xff201A1B),
-          ),
-        ),
-      ),
-    );
+    return _buildBody(scrollController, context);
   }
 
   Widget _buildBody(ScrollController scrollController, BuildContext context) {

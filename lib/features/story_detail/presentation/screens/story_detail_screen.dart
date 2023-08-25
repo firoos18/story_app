@@ -26,6 +26,7 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xffFFFBFF),
       body: _buildBody(),
     );
   }
