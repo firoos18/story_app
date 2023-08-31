@@ -9,6 +9,7 @@ import 'package:story_app_dicoding/features/navbar/presentation/screens/navigati
 import 'package:story_app_dicoding/features/story/presentation/bloc/stories_bloc.dart';
 import 'package:story_app_dicoding/features/story/presentation/screens/story_screen.dart';
 import 'package:story_app_dicoding/features/story_detail/presentation/bloc/story_detail_bloc.dart';
+import 'package:story_app_dicoding/features/upload_story/presentation/bloc/upload_image_bloc.dart';
 import 'package:story_app_dicoding/injection_container.dart';
 
 Future<void> main() async {
@@ -40,6 +41,9 @@ class MainApp extends StatelessWidget {
           create: (_) => sl(),
         ),
         BlocProvider<NavigationBloc>(
+          create: (_) => sl(),
+        ),
+        BlocProvider<UploadImageBloc>(
           create: (_) => sl(),
         ),
       ],

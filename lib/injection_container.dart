@@ -25,6 +25,11 @@ import 'package:story_app_dicoding/features/story_detail/data/repository/story_d
 import 'package:story_app_dicoding/features/story_detail/domain/repository/story_detail_repository.dart';
 import 'package:story_app_dicoding/features/story_detail/domain/usecase/get_story_detail_usecase.dart';
 import 'package:story_app_dicoding/features/story_detail/presentation/bloc/story_detail_bloc.dart';
+import 'package:story_app_dicoding/features/upload_story/data/data_sources/upload_story_api_service.dart';
+import 'package:story_app_dicoding/features/upload_story/data/repository/upload_story_repository_impl.dart';
+import 'package:story_app_dicoding/features/upload_story/domain/repository/upload_story_repository.dart';
+import 'package:story_app_dicoding/features/upload_story/domain/usecase/upload_story_usecase.dart';
+import 'package:story_app_dicoding/features/upload_story/presentation/bloc/upload_image_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -43,6 +48,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<RegisterApiService>(RegisterApiService(sl()));
   sl.registerSingleton<LoginApiService>(LoginApiService(sl()));
   sl.registerSingleton<StoryDetailApiService>(StoryDetailApiService(sl()));
+  sl.registerSingleton<UploadStoryApiService>(UploadStoryApiService(sl()));
 
   sl.registerSingleton<StoryRepository>(
     StoryRepositoryImpl(sl()),
@@ -55,6 +61,9 @@ Future<void> initializeDependencies() async {
   );
   sl.registerSingleton<StoryDetailRepository>(
     StoryDetailRepositoryImpl(sl()),
+  );
+  sl.registerSingleton<UploadStoryRepository>(
+    UploadStoryRepositoryImpl(sl()),
   );
 
   // Use Cases
@@ -79,6 +88,9 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<GetStoryDetailUseCase>(
     GetStoryDetailUseCase(sl()),
   );
+  sl.registerSingleton<UploadStoryUseCase>(
+    UploadStoryUseCase(sl()),
+  );
 
   // Blocs
   sl.registerFactory<StoriesBloc>(
@@ -92,5 +104,8 @@ Future<void> initializeDependencies() async {
   );
   sl.registerFactory<NavigationBloc>(
     () => NavigationBloc(),
+  );
+  sl.registerFactory<UploadImageBloc>(
+    () => UploadImageBloc(sl()),
   );
 }
